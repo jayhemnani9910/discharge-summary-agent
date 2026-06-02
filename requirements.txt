@@ -1,0 +1,8 @@
+# Core runtime dependencies (pinned to the versions this project was built/tested against).
+google-genai==2.7.0      # Gemini API client (chat + vision). The only LLM dependency.
+pypdfium2==5.9.0         # Pure-pip PDF rasteriser (no system poppler needed) for page rendering.
+pillow==12.2.0           # Image handling for the rendered pages.
+python-dotenv==1.2.2     # Loads the API key from a local .env (kept out of version control).
+
+# Dev / test only.
+pytest==9.0.3

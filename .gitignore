@@ -1,0 +1,26 @@
+# Secrets — API keys must never enter the repo.
+.env
+*.key
+
+# Local tooling
+.claude/
+
+# PDFs are not committed to this public repo: Dscribe's assignment brief is their
+# material, and the provided patient scans are synthetic data we keep off a public host.
+# The generated drafts/traces (markdown/json) are committed; the source PDFs are not.
+*.pdf
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+
+# Local rendering / transcription cache (regenerated on demand).
+cache/
+
+# Editor noise
+.DS_Store
+.idea/
+.vscode/
