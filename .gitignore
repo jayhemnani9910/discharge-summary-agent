@@ -24,3 +24,11 @@ cache/
 .DS_Store
 .idea/
 .vscode/
+
+# Excluded from this public repo (delivered via the assignment form instead):
+# the README writeup, the video script, the generated drafts/traces, and the
+# vision transcript of the synthetic data. Source code only is published here.
+*.md
+docs/
+outputs/
+reference/
