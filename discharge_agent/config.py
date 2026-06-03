@@ -29,6 +29,11 @@ def _int(name: str, default: int) -> int:
         return default
 
 
+def _csv(name: str) -> list:
+    """Parse a comma-separated env var into a list of non-empty, stripped values."""
+    return [x.strip() for x in os.environ.get(name, "").split(",") if x.strip()]
+
+
 @dataclass
 class Config:
     # --- Provider selection -------------------------------------------------
@@ -37,10 +42,22 @@ class Config:
         default_factory=lambda: os.environ.get("CHAT_PROVIDER", os.environ.get("LLM_PROVIDER", "gemini")))
     vision_provider: str = field(default_factory=lambda: os.environ.get("VISION_PROVIDER", "gemini"))
 
-    # Gemini (vision and/or chat).
+    # Gemini (vision and/or chat). Multiple keys and a model fallback list are supported so a
+    # 429 (quota) on one key/model rotates to the next instead of failing the page. Defaults are
+    # gemini-2.5-flash (gemini-2.0-flash has free-tier limit:0 and must not be the default).
     gemini_api_key: str = field(default_factory=lambda: os.environ.get("GEMINI_API_KEY", ""))
-    gemini_chat_model: str = field(default_factory=lambda: os.environ.get("GEMINI_CHAT_MODEL", "gemini-2.0-flash"))
-    gemini_vision_model: str = field(default_factory=lambda: os.environ.get("GEMINI_VISION_MODEL", "gemini-2.0-flash"))
+    gemini_api_keys: list = field(
+        default_factory=lambda: _csv("GEMINI_API_KEYS") or _csv("GEMINI_API_KEY"))
+    gemini_chat_model: str = field(
+        default_factory=lambda: os.environ.get("GEMINI_CHAT_MODEL", "gemini-2.5-flash"))
+    gemini_vision_model: str = field(
+        default_factory=lambda: os.environ.get("GEMINI_VISION_MODEL", "gemini-2.5-flash"))
+    gemini_chat_models: list = field(
+        default_factory=lambda: _csv("GEMINI_CHAT_MODELS")
+        or [os.environ.get("GEMINI_CHAT_MODEL", "gemini-2.5-flash")])
+    gemini_vision_models: list = field(
+        default_factory=lambda: _csv("GEMINI_VISION_MODELS")
+        or [os.environ.get("GEMINI_VISION_MODEL", "gemini-2.5-flash")])
 
     # DeepSeek (chat only; OpenAI-compatible API).
     deepseek_api_key: str = field(default_factory=lambda: os.environ.get("DEEPSEEK_API_KEY", ""))
@@ -48,7 +65,7 @@ class Config:
     deepseek_base_url: str = field(default_factory=lambda: os.environ.get("DEEPSEEK_BASE_URL", "https://api.deepseek.com"))
 
     # --- Control caps (Hard requirement #9: the agent cannot run forever) ---
-    max_steps: int = field(default_factory=lambda: _int("AGENT_MAX_STEPS", 80))
+    max_steps: int = field(default_factory=lambda: _int("AGENT_MAX_STEPS", 120))
     max_consecutive_tool_errors: int = field(default_factory=lambda: _int("AGENT_MAX_TOOL_ERRORS", 8))
 
     # --- Failure handling (Hard requirement #8) -----------------------------
@@ -70,11 +87,12 @@ class Config:
     # --- validation ---------------------------------------------------------
     def require_keys(self, need_vision: bool) -> None:
         missing = []
-        if self.chat_provider == "gemini" and not self.gemini_api_key:
+        if self.chat_provider == "gemini" and not (self.gemini_api_keys or self.gemini_api_key):
             missing.append("GEMINI_API_KEY (chat)")
         if self.chat_provider == "deepseek" and not self.deepseek_api_key:
             missing.append("DEEPSEEK_API_KEY (chat)")
-        if need_vision and self.vision_provider == "gemini" and not self.gemini_api_key:
+        if (need_vision and self.vision_provider == "gemini"
+                and not (self.gemini_api_keys or self.gemini_api_key)):
             missing.append("GEMINI_API_KEY (vision)")
         if need_vision and self.vision_provider == "deepseek":
             raise SystemExit("DeepSeek has no vision model; use a vision provider or supply "
