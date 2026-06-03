@@ -1,0 +1,8 @@
+{
+  "section": "patient_demographics",
+  "draft": "## Patient Demographics\n- Jane Doe, 52F (MRN DEMO-1)  \n  _[source: page 1; confidence medium]_",
+  "candidates": [
+    "## Patient Demographics\n- Jane Doe, 52F (MRN DEMO-1)  \n  _[source: page 1; confidence medium]_",
+    "## Patient Demographics\n• Jane Doe, 52F (MRN DEMO-1)\n [ref: page 1]"
+  ]
+}

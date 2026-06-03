@@ -1,0 +1,355 @@
+{
+  "patient_id": "demo-patient",
+  "finalized": true,
+  "incomplete_reason": "",
+  "fields": {
+    "patient_demographics": {
+      "key": "patient_demographics",
+      "status": "VALUE",
+      "values": [
+        {
+          "value": "Jane Doe, 52F (MRN DEMO-1)",
+          "source_page": 1,
+          "quote": "Name: Jane Doe, 52F",
+          "confidence": "medium",
+          "verified": true,
+          "verifier_note": "demo"
+        }
+      ],
+      "detail": ""
+    },
+    "admission_date": {
+      "key": "admission_date",
+      "status": "VALUE",
+      "values": [
+        {
+          "value": "01/03/2026",
+          "source_page": 1,
+          "quote": "Admitted 01/03/2026",
+          "confidence": "medium",
+          "verified": true,
+          "verifier_note": "demo"
+        }
+      ],
+      "detail": ""
+    },
+    "discharge_date": {
+      "key": "discharge_date",
+      "status": "VALUE",
+      "values": [
+        {
+          "value": "05/03/2026",
+          "source_page": 1,
+          "quote": "Discharged 05/03/2026",
+          "confidence": "medium",
+          "verified": true,
+          "verifier_note": "demo"
+        }
+      ],
+      "detail": ""
+    },
+    "principal_diagnosis": {
+      "key": "principal_diagnosis",
+      "status": "CONFLICT",
+      "values": [
+        {
+          "value": "Acute gastroenteritis with dehydration",
+          "source_page": 1,
+          "quote": "Acute gastroenteritis with dehydration",
+          "confidence": "medium",
+          "verified": true,
+          "verifier_note": "demo"
+        },
+        {
+          "value": "DKA (diabetic ketoacidosis)",
+          "source_page": 2,
+          "quote": "DKA (diabetic ketoacidosis)",
+          "confidence": "medium",
+          "verified": true,
+          "verifier_note": "demo"
+        }
+      ],
+      "detail": ""
+    },
+    "secondary_diagnoses": {
+      "key": "secondary_diagnoses",
+      "status": "VALUE",
+      "values": [
+        {
+          "value": "Type 2 diabetes mellitus",
+          "source_page": 1,
+          "quote": "Secondary: Type 2 diabetes mellitus",
+          "confidence": "medium",
+          "verified": true,
+          "verifier_note": "demo"
+        }
+      ],
+      "detail": ""
+    },
+    "hospital_course": {
+      "key": "hospital_course",
+      "status": "VALUE",
+      "values": [
+        {
+          "value": "IV fluids and antibiotics; clinically improved",
+          "source_page": 1,
+          "quote": "treated with IV fluids and antibiotics; clinically improved",
+          "confidence": "medium",
+          "verified": true,
+          "verifier_note": "demo"
+        }
+      ],
+      "detail": ""
+    },
+    "procedures": {
+      "key": "procedures",
+      "status": "NOT_DOCUMENTED",
+      "values": [],
+      "detail": "no procedures documented in the notes"
+    },
+    "discharge_medications": {
+      "key": "discharge_medications",
+      "status": "VALUE",
+      "values": [],
+      "detail": ""
+    },
+    "allergies": {
+      "key": "allergies",
+      "status": "VALUE",
+      "values": [
+        {
+          "value": "NKDA",
+          "source_page": 1,
+          "quote": "Allergies: NKDA",
+          "confidence": "medium",
+          "verified": true,
+          "verifier_note": "demo"
+        }
+      ],
+      "detail": ""
+    },
+    "follow_up_instructions": {
+      "key": "follow_up_instructions",
+      "status": "VALUE",
+      "values": [
+        {
+          "value": "Review on 09/03/2026",
+          "source_page": 1,
+          "quote": "Follow up on 09/03/2026",
+          "confidence": "medium",
+          "verified": true,
+          "verifier_note": "demo"
+        }
+      ],
+      "detail": ""
+    },
+    "pending_results": {
+      "key": "pending_results",
+      "status": "PENDING",
+      "values": [
+        {
+          "value": "Urine culture - report awaited",
+          "source_page": 1,
+          "quote": "Urine culture sent, report awaited",
+          "confidence": "medium",
+          "verified": false,
+          "verifier_note": ""
+        }
+      ],
+      "detail": ""
+    },
+    "discharge_condition": {
+      "key": "discharge_condition",
+      "status": "VALUE",
+      "values": [
+        {
+          "value": "hemodynamically stable",
+          "source_page": 1,
+          "quote": "Discharge condition: hemodynamically stable",
+          "confidence": "medium",
+          "verified": true,
+          "verifier_note": "demo"
+        }
+      ],
+      "detail": ""
+    }
+  },
+  "medications": [
+    {
+      "stage": "discharge",
+      "name": "Raciper",
+      "details": "40mg 1-0-0",
+      "source_page": 1,
+      "quote": "Tab Raciper 40mg 1-0-0",
+      "verified": true
+    },
+    {
+      "stage": "discharge",
+      "name": "Emeset",
+      "details": "4mg 1-1-1",
+      "source_page": 1,
+      "quote": "Tab Emeset 4mg 1-1-1",
+      "verified": true
+    },
+    {
+      "stage": "discharge",
+      "name": "Oflox",
+      "details": "200mg 1-0-1",
+      "source_page": 1,
+      "quote": "Tab Oflox 200mg 1-0-1",
+      "verified": true
+    },
+    {
+      "stage": "admission",
+      "name": "Insulin",
+      "details": "10U",
+      "source_page": 2,
+      "quote": "Insulin 10U",
+      "verified": true
+    },
+    {
+      "stage": "admission",
+      "name": "Raciper",
+      "details": "40mg 1-0-0",
+      "source_page": 2,
+      "quote": "Tab Raciper 40mg 1-0-0",
+      "verified": true
+    }
+  ],
+  "medication_changes": [
+    {
+      "name": "rabeprazole",
+      "change_type": "continued",
+      "admission_detail": "40mg 1-0-0",
+      "discharge_detail": "40mg 1-0-0",
+      "reason": "",
+      "reason_documented": false,
+      "source_pages": [
+        1
+      ]
+    },
+    {
+      "name": "ondansetron",
+      "change_type": "added",
+      "admission_detail": "",
+      "discharge_detail": "4mg 1-1-1",
+      "reason": "",
+      "reason_documented": false,
+      "source_pages": [
+        1
+      ]
+    },
+    {
+      "name": "ofloxacin",
+      "change_type": "added",
+      "admission_detail": "",
+      "discharge_detail": "200mg 1-0-1",
+      "reason": "",
+      "reason_documented": false,
+      "source_pages": [
+        1
+      ]
+    },
+    {
+      "name": "insulin",
+      "change_type": "stopped",
+      "admission_detail": "10U",
+      "discharge_detail": "",
+      "reason": "",
+      "reason_documented": false,
+      "source_pages": [
+        2
+      ]
+    }
+  ],
+  "interaction_checks": [
+    {
+      "input": [
+        "Raciper",
+        "Emeset",
+        "Oflox"
+      ],
+      "interactions": [
+        {
+          "drugs": [
+            "ofloxacin",
+            "ondansetron"
+          ],
+          "severity": "high",
+          "description": "Additive QT-interval prolongation risk from combining ofloxacin + ondansetron."
+        }
+      ]
+    }
+  ],
+  "flags": [
+    {
+      "field": "source_document",
+      "issue_type": "unreadable",
+      "detail": "Page 3 could not be transcribed; its content is unknown.",
+      "severity": "high",
+      "source_pages": [
+        3
+      ]
+    },
+    {
+      "field": "principal_diagnosis",
+      "issue_type": "conflict",
+      "detail": "Sources disagree on Principal Diagnosis: 'Acute gastroenteritis with dehydration' (p1); 'DKA (diabetic ketoacidosis)' (p2)",
+      "severity": "high",
+      "source_pages": [
+        1,
+        2
+      ]
+    },
+    {
+      "field": "procedures",
+      "issue_type": "missing",
+      "detail": "Procedures: NOT_DOCUMENTED — no procedures documented in the notes",
+      "severity": "medium",
+      "source_pages": []
+    },
+    {
+      "field": "discharge_medications",
+      "issue_type": "med_reconciliation",
+      "detail": "ondansetron ADDED with no documented reason",
+      "severity": "high",
+      "source_pages": [
+        1
+      ]
+    },
+    {
+      "field": "discharge_medications",
+      "issue_type": "med_reconciliation",
+      "detail": "ofloxacin ADDED with no documented reason",
+      "severity": "high",
+      "source_pages": [
+        1
+      ]
+    },
+    {
+      "field": "discharge_medications",
+      "issue_type": "med_reconciliation",
+      "detail": "insulin STOPPED with no documented reason",
+      "severity": "high",
+      "source_pages": [
+        2
+      ]
+    },
+    {
+      "field": "discharge_medications",
+      "issue_type": "drug_interaction",
+      "detail": "Interaction (high): Additive QT-interval prolongation risk from combining ofloxacin + ondansetron.",
+      "severity": "high",
+      "source_pages": []
+    },
+    {
+      "field": "hospital_course",
+      "issue_type": "safety",
+      "detail": "'hospital_course' is a synthesized narrative; verify it against the source record before use.",
+      "severity": "medium",
+      "source_pages": [
+        1
+      ]
+    }
+  ]
+}

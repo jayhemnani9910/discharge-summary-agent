@@ -1,0 +1,1146 @@
+{
+  "patient_id": "patient2",
+  "finalized": true,
+  "incomplete_reason": "",
+  "fields": {
+    "patient_demographics": {
+      "key": "patient_demographics",
+      "status": "MISSING",
+      "values": [
+        {
+          "value": "Patient name: NOT DOCUMENTED in readable pages; Age: NOT DOCUMENTED; Sex: CONFLICT (female per page 1, male per page 46); Weight: 71 kg; Ward: HDU/SDICU",
+          "source_page": 1,
+          "quote": "Initially she was treated at local clinic.",
+          "confidence": "low",
+          "verified": false,
+          "verifier_note": ""
+        },
+        {
+          "value": "Patient name: NOT DOCUMENTED in readable pages; Age: NOT DOCUMENTED; Sex: CONFLICT (male per page 46, female per page 1); Weight: 71 kg",
+          "source_page": 46,
+          "quote": "Patient on his Regular medication",
+          "confidence": "low",
+          "verified": false,
+          "verifier_note": ""
+        }
+      ],
+      "detail": "Patient name, age, and MRN are not documented in any readable page. Gender is conflicting (she vs his). Weight is 71 kg (documented on medication charts)."
+    },
+    "admission_date": {
+      "key": "admission_date",
+      "status": "VALUE",
+      "values": [
+        {
+          "value": "26/02/2026",
+          "source_page": 16,
+          "quote": "Date & Time of Nursing Initial Assessment: 26-2-26",
+          "confidence": "high",
+          "verified": true,
+          "verifier_note": "The source text states 'Date & Time of Nursing Initial Assessment: 26-2-26', which matches the claimed admission date 26/02/2026."
+        }
+      ],
+      "detail": ""
+    },
+    "discharge_date": {
+      "key": "discharge_date",
+      "status": "VALUE",
+      "values": [
+        {
+          "value": "02/03/2026 (per consultation note stating discharge on request evening)",
+          "source_page": 56,
+          "quote": "Discharge on Request (Evening)",
+          "confidence": "medium",
+          "verified": true,
+          "verifier_note": "Source text states 'Discharge on Request (Evening)' on date '02/03/2026', supporting the value."
+        }
+      ],
+      "detail": ""
+    },
+    "principal_diagnosis": {
+      "key": "principal_diagnosis",
+      "status": "CONFLICT",
+      "values": [
+        {
+          "value": "DKA (Diabetic Ketoacidosis) - per ER diagnosis and multiple consultation notes",
+          "source_page": 3,
+          "quote": "Diagnosis: - DKA",
+          "confidence": "high",
+          "verified": true,
+          "verifier_note": "Source text explicitly states 'Diagnosis: - DKA' in the ER observation chart."
+        },
+        {
+          "value": "Acute gastroenteritis with dehydration / Urinary tract infection (per admission note)",
+          "source_page": 1,
+          "quote": "DIAGNOSIS: 1) ACUTE GASTROENTERITIS WITH DEHYDRATION 2) URINARY TRACT INFECTION",
+          "confidence": "high",
+          "verified": true,
+          "verifier_note": "Source text lists '1) ACUTE GASTROENTERITIS WITH DEHYDRATION' and '2) URINARY TRACT INFECTION' as diagnoses."
+        },
+        {
+          "value": "AFI, DKA, Uncontrolled T2DM, B/L pyelonephritis (per consultation notes)",
+          "source_page": 54,
+          "quote": "Case of AFI, DKA Uncontrolled T2DM. B/L pyelonephritis",
+          "confidence": "high",
+          "verified": true,
+          "verifier_note": "Source text states 'Case of AFI, DKA, Uncontrolled T2DM. B/L pyelonephritis'."
+        }
+      ],
+      "detail": ""
+    },
+    "secondary_diagnoses": {
+      "key": "secondary_diagnoses",
+      "status": "VALUE",
+      "values": [
+        {
+          "value": "Uncontrolled Type 2 Diabetes Mellitus (T2DM)",
+          "source_page": 46,
+          "quote": "K/c/o T2DM (on Ayurvedic Medication) HbA1c - 13.9%",
+          "confidence": "high",
+          "verified": true,
+          "verifier_note": "Source text states 'K/c/o T2DM (on Ayurvedic Medication)' and 'HbA1c - 13.9%' indicating uncontrolled T2DM."
+        },
+        {
+          "value": "Acute Kidney Injury (AKI)",
+          "source_page": 49,
+          "quote": "care of uncontrolled T2 DM. AKI",
+          "confidence": "high",
+          "verified": true,
+          "verifier_note": "Source text explicitly lists 'AKI' as a diagnosis."
+        },
+        {
+          "value": "Cholelithiasis without cholecystitis",
+          "source_page": 48,
+          "quote": "Cholelithiasis w/o cholecystitis",
+          "confidence": "high",
+          "verified": true,
+          "verifier_note": "Source text lists 'Cholelithiasis w/o cholecystitis' in final diagnosis."
+        },
+        {
+          "value": "Grade-I fatty liver / Hepatomegaly",
+          "source_page": 30,
+          "quote": "Mild hepatomegaly with grade I fatty infiltration.",
+          "confidence": "high",
+          "verified": true,
+          "verifier_note": "Source text states 'Mild hepatomegaly with grade I fatty infiltration'."
+        },
+        {
+          "value": "Bilateral pyelonephritis",
+          "source_page": 41,
+          "quote": "Features likely suggestive of acute pyelonephritis.",
+          "confidence": "high",
+          "verified": true,
+          "verifier_note": "Source text impression states 'Features likely suggestive of acute pyelonephritis' and describes bilateral findings."
+        },
+        {
+          "value": "Thyroid disorder (on treatment)",
+          "source_page": 1,
+          "quote": "PAST HISTORY:K/C/O Thyroid disorder on treatment.",
+          "confidence": "high",
+          "verified": true,
+          "verifier_note": "Source text states 'K/C/O Thyroid disorder on treatment'."
+        },
+        {
+          "value": "? Synovitis (hip pain)",
+          "source_page": 48,
+          "quote": "Final Diagnosis: - ? synovitis",
+          "confidence": "medium",
+          "verified": true,
+          "verifier_note": "Source text lists '? synovitis' in final diagnosis."
+        },
+        {
+          "value": "Tiny left renal calyceal calculus",
+          "source_page": 41,
+          "quote": "Tiny left renal calyceal calculus.",
+          "confidence": "high",
+          "verified": true,
+          "verifier_note": "Source text states 'Tiny 1-2 mm calculus noted in the lower pole' and impression includes 'Tiny left renal calyceal calculus'."
+        },
+        {
+          "value": "Minimal ascites",
+          "source_page": 41,
+          "quote": "Minimal ascites noted.",
+          "confidence": "high",
+          "verified": true,
+          "verifier_note": "Source text states 'Minimal ascites noted' and impression includes 'Minimal ascites'."
+        },
+        {
+          "value": "Bilateral mild pleural effusion with subsegmental lung consolidation",
+          "source_page": 41,
+          "quote": "Bilateral mild pleural effusion with underlying subsegmental lung consolidation noted.",
+          "confidence": "high",
+          "verified": true,
+          "verifier_note": "Source text states 'Bilateral mild pleural effusion with underlying subsegmental lung consolidation noted' and impression includes same."
+        }
+      ],
+      "detail": ""
+    },
+    "hospital_course": {
+      "key": "hospital_course",
+      "status": "VALUE",
+      "values": [
+        {
+          "value": "Patient was discharged at request on 02/03/2026 (against medical advice as attenders were not willing to stay for further management) in hemodynamically stable condition with discharge medications and follow-up instructions.",
+          "source_page": 2,
+          "quote": "Patient was advised to stay back for further management but attenders not willing to the same, hence being discharged at request",
+          "confidence": "high",
+          "verified": true,
+          "verifier_note": "Source text states 'attenders not willing to the same, hence being discharged at request' and 'Hemodynamically stable' with discharge medications and follow-up instructions."
+        },
+        {
+          "value": "Patient presented to ER with blood glucose 443 mg/dL and BP 87/50 mmHg.",
+          "source_page": 3,
+          "quote": "Blood Glucose 443 mg/dl",
+          "confidence": "high",
+          "verified": true,
+          "verifier_note": "Source text shows Blood Glucose 443 mg/dl and BP 87/50."
+        },
+        {
+          "value": "Patient had BP 87/50 mmHg on presentation.",
+          "source_page": 3,
+          "quote": "BP 87/50",
+          "confidence": "high",
+          "verified": true,
+          "verifier_note": "Source text shows BP 87/50."
+        },
+        {
+          "value": "CT KUB showed features suggestive of acute pyelonephritis, hepatomegaly, and cholelithiasis.",
+          "source_page": 41,
+          "quote": "Features likely suggestive of acute pyelonephritis.",
+          "confidence": "high",
+          "verified": true,
+          "verifier_note": "Source text impression includes 'Features likely suggestive of acute pyelonephritis', 'Hepatomegaly', and 'Cholelithiasis without cholecystitis'."
+        },
+        {
+          "value": "Patient was treated with IV antibiotics Meropenem 1gm IV.",
+          "source_page": 42,
+          "quote": "Drug INJ MEROMAC.",
+          "confidence": "high",
+          "verified": true,
+          "verifier_note": "Source text shows 'Drug INJ MEROMAC.' with dose 1gm, route IV."
+        },
+        {
+          "value": "Patient was treated with IV PAN 40mg.",
+          "source_page": 42,
+          "quote": "Drug INJ PAN",
+          "confidence": "high",
+          "verified": true,
+          "verifier_note": "Source text shows 'Drug INJ PAN' with dose 40mg, route IV."
+        },
+        {
+          "value": "Patient was treated with IV EMESET 4mg.",
+          "source_page": 42,
+          "quote": "Drug INJ EMESET",
+          "confidence": "high",
+          "verified": true,
+          "verifier_note": "Source text shows 'Drug INJ EMESET' with dose 4mg, route IV."
+        },
+        {
+          "value": "CT KUB showed hepatomegaly and cholelithiasis without cholecystitis.",
+          "source_page": 41,
+          "quote": "Hepatomegaly",
+          "confidence": "high",
+          "verified": true,
+          "verifier_note": "Source text impression includes 'Hepatomegaly' and 'Cholelithiasis without cholecystitis'."
+        },
+        {
+          "value": "CT KUB showed cholelithiasis without cholecystitis.",
+          "source_page": 41,
+          "quote": "Cholelithiasis without cholecystitis.",
+          "confidence": "high",
+          "verified": true,
+          "verifier_note": "Source text impression includes 'Cholelithiasis without cholecystitis'."
+        }
+      ],
+      "detail": ""
+    },
+    "procedures": {
+      "key": "procedures",
+      "status": "VALUE",
+      "values": [
+        {
+          "value": "IV Cannulation (multiple times)",
+          "source_page": 15,
+          "quote": "IV Cannulization Yes (18-G) Yes 18G Yes 18G Yes (18G) Yes (21G)",
+          "confidence": "high",
+          "verified": true,
+          "verifier_note": "Source text shows 'IV Cannulization Yes (18-G) Yes 18G Yes 18G Yes (18G) Yes (21G)' indicating multiple times."
+        },
+        {
+          "value": "Foley's Catheterization",
+          "source_page": 15,
+          "quote": "Felley's Catheterisation Yes 16F Yes 16G Yes 16G",
+          "confidence": "high",
+          "verified": true,
+          "verifier_note": "Source text shows 'Felley's Catheterisation Yes 16F Yes 16G Yes 16G PK Rumar' indicating Foley's catheterization performed."
+        },
+        {
+          "value": "CT KUB (plain)",
+          "source_page": 41,
+          "quote": "C. T. KUB (PLAIN)",
+          "confidence": "high",
+          "verified": true,
+          "verifier_note": "Source text is titled 'C. T. KUB (PLAIN)' and describes a plain CT KUB."
+        },
+        {
+          "value": "USG Abdomen and Pelvis (bedside)",
+          "source_page": 30,
+          "quote": "USG ABDOMEN & PELVIS [BEDSIDE]",
+          "confidence": "high",
+          "verified": true,
+          "verifier_note": "Source text is titled 'USG ABDOMEN & PELVIS [BEDSIDE]'."
+        },
+        {
+          "value": "Echocardiogram (2D Echo)",
+          "source_page": 50,
+          "quote": "2D Echo Sinus tachycardia @ HR- 149 bpm Normal LV systolic function",
+          "confidence": "high",
+          "verified": true,
+          "verifier_note": "Source text includes '2D Echo' and describes echocardiogram findings."
+        },
+        {
+          "value": "X-ray pelvis - B/L hips (AP view)",
+          "source_page": 57,
+          "quote": "X-ray pelvis - B/L hips - Ap view",
+          "confidence": "high",
+          "verified": true,
+          "verifier_note": "Source text includes 'X-ray pelvis - B/L hips - Ap view'."
+        },
+        {
+          "value": "Oxygen therapy",
+          "source_page": 15,
+          "quote": "Oxygen Yes",
+          "confidence": "high",
+          "verified": true,
+          "verifier_note": "Source text shows 'Oxygen Yes' in the procedure chart."
+        },
+        {
+          "value": "ECG",
+          "source_page": 3,
+          "quote": "ECG Specialty",
+          "confidence": "high",
+          "verified": true,
+          "verifier_note": "Source text lists 'ECG' under investigations."
+        }
+      ],
+      "detail": ""
+    },
+    "discharge_medications": {
+      "key": "discharge_medications",
+      "status": "VALUE",
+      "values": [],
+      "detail": ""
+    },
+    "allergies": {
+      "key": "allergies",
+      "status": "VALUE",
+      "values": [
+        {
+          "value": "No known drug allergies (documented as \"Not known\" / \"NO\" / \"Not Known\" on multiple pages)",
+          "source_page": 46,
+          "quote": "Allergic History: Not known",
+          "confidence": "high",
+          "verified": true,
+          "verifier_note": "Source text states 'Allergic History: Not known' which directly supports the claim of no known drug allergies."
+        }
+      ],
+      "detail": ""
+    },
+    "follow_up_instructions": {
+      "key": "follow_up_instructions",
+      "status": "VALUE",
+      "values": [
+        {
+          "value": "Review immediately in case of fever, loose stools, vomiting, fatigue",
+          "source_page": 2,
+          "quote": "Review immediately in case of fever, loose stools, vomiting, fatigue.",
+          "confidence": "high",
+          "verified": true,
+          "verifier_note": "Source text explicitly states: 'Review immediately in case of fever, loose stools, vomiting, fatigue.'"
+        },
+        {
+          "value": "Review on 09.03.2026 for CBC",
+          "source_page": 2,
+          "quote": "Review on 09.03.2026. CBC",
+          "confidence": "high",
+          "verified": true,
+          "verifier_note": "Source text explicitly states: 'Review on 09.03.2026. CBC'"
+        },
+        {
+          "value": "Diet counselling done - strict diet modification, low GI foods, fiber rich foods",
+          "source_page": 58,
+          "quote": "Diet counselling done & diet chart issued Adv - Strict diet modification - Allow low GI foods - Include fiber rich foods",
+          "confidence": "high",
+          "verified": true,
+          "verifier_note": "Source text explicitly states: 'Diet counselling done & diet chart issued', 'Strict diet modification', 'Allow low GI foods', 'Include fiber rich foods'"
+        }
+      ],
+      "detail": ""
+    },
+    "pending_results": {
+      "key": "pending_results",
+      "status": "PENDING",
+      "values": [
+        {
+          "value": "Urine culture and sensitivity - report awaited",
+          "source_page": 2,
+          "quote": "Urine culture and sensitivity sent- report awaited.",
+          "confidence": "high",
+          "verified": false,
+          "verifier_note": ""
+        }
+      ],
+      "detail": ""
+    },
+    "discharge_condition": {
+      "key": "discharge_condition",
+      "status": "VALUE",
+      "values": [
+        {
+          "value": "Hemodynamically stable",
+          "source_page": 2,
+          "quote": "CONDITION AT DISCHARGE: Hemodynamically stable",
+          "confidence": "high",
+          "verified": true,
+          "verifier_note": "Source text explicitly states 'CONDITION AT DISCHARGE: Hemodynamically stable'."
+        }
+      ],
+      "detail": ""
+    }
+  },
+  "medications": [
+    {
+      "stage": "discharge",
+      "name": "TAB. RACIPER",
+      "details": "40MG, 1-0-0, 7 DAYS (BEFORE FOOD)",
+      "source_page": 2,
+      "quote": "1 | TAB. RACIPER | 40MG | 1-0-0 | 7 DAYS (BEFORE FOOD)",
+      "verified": true
+    },
+    {
+      "stage": "discharge",
+      "name": "TAB. EMESET",
+      "details": "4MG, 1-1-1, 3 DAYS",
+      "source_page": 2,
+      "quote": "2 | TAB. EMESET | 4MG | 1-1-1 | 3 DAYS",
+      "verified": true
+    },
+    {
+      "stage": "discharge",
+      "name": "TAB. OFLOX TZ",
+      "details": "1-0-1, 5 DAYS",
+      "source_page": 2,
+      "quote": "3 | TAB. OFLOX TZ | | 1-0-1 | 5 DAYS",
+      "verified": true
+    },
+    {
+      "stage": "discharge",
+      "name": "TAB M STRONG",
+      "details": "1-0-0, 15 DAYS",
+      "source_page": 2,
+      "quote": "4 | TAB M STRONG | | 1-0-0 | 15 DAYS",
+      "verified": true
+    },
+    {
+      "stage": "discharge",
+      "name": "TAB. ZEDOTT",
+      "details": "1-1-1, 3 DAYS",
+      "source_page": 2,
+      "quote": "5 | TAB. ZEDOTT | | 1-1-1 | 3 DAYS",
+      "verified": true
+    },
+    {
+      "stage": "discharge",
+      "name": "TAB. ENTR(",
+      "details": "1-0-1, 3 DAYS",
+      "source_page": 2,
+      "quote": "6 | TAB. ENTR( | | 1-0-1 | 3 DAYS",
+      "verified": true
+    },
+    {
+      "stage": "discharge",
+      "name": "TAB. MEFTAL SPAS",
+      "details": "1 TAB SOS, 4 TABLETS",
+      "source_page": 2,
+      "quote": "7 | TAB. MEFTAL SPAS | | 1 TAB SOS | 4 TABLETS",
+      "verified": true
+    },
+    {
+      "stage": "discharge",
+      "name": "TAB. LOPIRAMIDE",
+      "details": "2MG, 1-0-1, 5 DAYS",
+      "source_page": 2,
+      "quote": "8 | TAB. LOPIRAMIDE | 2MG | 1-0-1 | 5 DAYS",
+      "verified": true
+    },
+    {
+      "stage": "admission",
+      "name": "INJ MEROMAC (Meropenem)",
+      "details": "1gm IV 1-1-1",
+      "source_page": 42,
+      "quote": "Drug INJ MEROMAC. 28/2/26 1/3/26 2/3/26 9AM 6AM 6AM Dose 1gm. Route IV Freq 1-1-1",
+      "verified": true
+    },
+    {
+      "stage": "admission",
+      "name": "INJ PAN (Pantoprazole)",
+      "details": "40mg IV 1-0-0",
+      "source_page": 42,
+      "quote": "Drug INJ PAN 28/2/26 1/3/26 2/3/26 6AM 6AM 6AM Dose 40mg Route IV Freq 1-0-0",
+      "verified": true
+    },
+    {
+      "stage": "admission",
+      "name": "INJ EMESET (Ondansetron)",
+      "details": "4mg IV 1-1-1",
+      "source_page": 42,
+      "quote": "Drug INJ EMESET 28/2/26 1/3/26 2/3/26 2PM 6AM 6AM Dose 4mg Route IV Freq 1-1-1",
+      "verified": true
+    },
+    {
+      "stage": "admission",
+      "name": "INJ LANTUS (Insulin Glargine)",
+      "details": "10 U SC OD",
+      "source_page": 44,
+      "quote": "Drug INJ LANTUS 28/2/26 1/3/26 2/3/26 1pm 2pm 2pm Dose 10 U Route SLC Freq OD.",
+      "verified": true
+    },
+    {
+      "stage": "admission",
+      "name": "TAB DOLO (Diclofenac)",
+      "details": "650mg PO 1+1",
+      "source_page": 44,
+      "quote": "Drug TAB DOLO 28/2/26 1/3/26 2/3/26 9 AM SPCC 10 AM 10 AM Dose 650mg Route PLO Freq 1+1",
+      "verified": true
+    },
+    {
+      "stage": "admission",
+      "name": "SEP Ger",
+      "details": "L/A L/A Freq 1+1",
+      "source_page": 44,
+      "quote": "Drug B & O SEP Ger 1/3/26 2/3/26 2PM 9 AM Dose L/A Route L/A Freq 1+1",
+      "verified": true
+    },
+    {
+      "stage": "admission",
+      "name": "IV Fluids NS/RL",
+      "details": "150 ml/hr",
+      "source_page": 45,
+      "quote": "28/2/26 1 PM NSLRL @ 150 ml/hr orally soft diet",
+      "verified": true
+    },
+    {
+      "stage": "admission",
+      "name": "INJ Sumol",
+      "details": "1gm IV SOS",
+      "source_page": 43,
+      "quote": "Sumol 4PM 3:30AM 2AM Dose 1gm N Route IV Freq sos 11:30PM G.U.S.P.M",
+      "verified": true
+    },
+    {
+      "stage": "admission",
+      "name": "INJ H. ACTRAPID",
+      "details": "S/S dose SC 1-1-1",
+      "source_page": 43,
+      "quote": "H. ACTRAPID. 8PM 9:30AM 10AM 10unit I.Ruping Dose S/S Route S/C Freq 1-1-1",
+      "verified": true
+    }
+  ],
+  "medication_changes": [
+    {
+      "name": "rabeprazole",
+      "change_type": "added",
+      "admission_detail": "",
+      "discharge_detail": "40MG, 1-0-0, 7 DAYS (BEFORE FOOD)",
+      "reason": "",
+      "reason_documented": false,
+      "source_pages": [
+        2
+      ]
+    },
+    {
+      "name": "ondansetron",
+      "change_type": "changed",
+      "admission_detail": "4mg IV 1-1-1",
+      "discharge_detail": "4MG, 1-1-1, 3 DAYS",
+      "reason": "",
+      "reason_documented": false,
+      "source_pages": [
+        2,
+        42
+      ]
+    },
+    {
+      "name": "ofloxacin",
+      "change_type": "added",
+      "admission_detail": "",
+      "discharge_detail": "1-0-1, 5 DAYS",
+      "reason": "",
+      "reason_documented": false,
+      "source_pages": [
+        2
+      ]
+    },
+    {
+      "name": "mstrong",
+      "change_type": "added",
+      "admission_detail": "",
+      "discharge_detail": "1-0-0, 15 DAYS",
+      "reason": "",
+      "reason_documented": false,
+      "source_pages": [
+        2
+      ]
+    },
+    {
+      "name": "zedott",
+      "change_type": "added",
+      "admission_detail": "",
+      "discharge_detail": "1-1-1, 3 DAYS",
+      "reason": "",
+      "reason_documented": false,
+      "source_pages": [
+        2
+      ]
+    },
+    {
+      "name": "entr",
+      "change_type": "added",
+      "admission_detail": "",
+      "discharge_detail": "1-0-1, 3 DAYS",
+      "reason": "",
+      "reason_documented": false,
+      "source_pages": [
+        2
+      ]
+    },
+    {
+      "name": "mefenamic acid",
+      "change_type": "added",
+      "admission_detail": "",
+      "discharge_detail": "1 TAB SOS, 4 TABLETS",
+      "reason": "",
+      "reason_documented": false,
+      "source_pages": [
+        2
+      ]
+    },
+    {
+      "name": "loperamide",
+      "change_type": "added",
+      "admission_detail": "",
+      "discharge_detail": "2MG, 1-0-1, 5 DAYS",
+      "reason": "",
+      "reason_documented": false,
+      "source_pages": [
+        2
+      ]
+    },
+    {
+      "name": "meropenem",
+      "change_type": "stopped",
+      "admission_detail": "1gm IV 1-1-1",
+      "discharge_detail": "",
+      "reason": "",
+      "reason_documented": false,
+      "source_pages": [
+        42
+      ]
+    },
+    {
+      "name": "pantoprazole",
+      "change_type": "stopped",
+      "admission_detail": "40mg IV 1-0-0",
+      "discharge_detail": "",
+      "reason": "",
+      "reason_documented": false,
+      "source_pages": [
+        42
+      ]
+    },
+    {
+      "name": "insulin glargine",
+      "change_type": "stopped",
+      "admission_detail": "10 U SC OD",
+      "discharge_detail": "",
+      "reason": "",
+      "reason_documented": false,
+      "source_pages": [
+        44
+      ]
+    },
+    {
+      "name": "dolo",
+      "change_type": "stopped",
+      "admission_detail": "650mg PO 1+1",
+      "discharge_detail": "",
+      "reason": "",
+      "reason_documented": false,
+      "source_pages": [
+        44
+      ]
+    },
+    {
+      "name": "sepger",
+      "change_type": "stopped",
+      "admission_detail": "L/A L/A Freq 1+1",
+      "discharge_detail": "",
+      "reason": "",
+      "reason_documented": false,
+      "source_pages": [
+        44
+      ]
+    },
+    {
+      "name": "ivfluidsnsrl",
+      "change_type": "stopped",
+      "admission_detail": "150 ml/hr",
+      "discharge_detail": "",
+      "reason": "",
+      "reason_documented": false,
+      "source_pages": [
+        45
+      ]
+    },
+    {
+      "name": "sumol",
+      "change_type": "stopped",
+      "admission_detail": "1gm IV SOS",
+      "discharge_detail": "",
+      "reason": "",
+      "reason_documented": false,
+      "source_pages": [
+        43
+      ]
+    },
+    {
+      "name": "insulin",
+      "change_type": "stopped",
+      "admission_detail": "S/S dose SC 1-1-1",
+      "discharge_detail": "",
+      "reason": "",
+      "reason_documented": false,
+      "source_pages": [
+        43
+      ]
+    }
+  ],
+  "interaction_checks": [
+    {
+      "input": [
+        "TAB. RACIPER (Rabeprazole)",
+        "TAB. EMESET (Ondansetron)",
+        "TAB. OFLOX TZ (Ofloxacin + Tinidazole)",
+        "TAB M STRONG",
+        "TAB. ZEDOTT",
+        "TAB. ENTR(",
+        "TAB. MEFTAL SPAS (Mefenamic acid + Dicyclomine)",
+        "TAB. LOPIRAMIDE (Loperamide)"
+      ],
+      "interactions": [
+        {
+          "drugs": [
+            "loperamide",
+            "ofloxacin",
+            "ondansetron"
+          ],
+          "severity": "high",
+          "description": "Additive QT-interval prolongation risk from combining loperamide + ofloxacin + ondansetron."
+        }
+      ]
+    }
+  ],
+  "flags": [
+    {
+      "field": "source_document",
+      "issue_type": "unreadable",
+      "detail": "Page 38 could not be transcribed; its content is unknown.",
+      "severity": "high",
+      "source_pages": [
+        38
+      ]
+    },
+    {
+      "field": "source_document",
+      "issue_type": "unreadable",
+      "detail": "Page 39 could not be transcribed; its content is unknown.",
+      "severity": "high",
+      "source_pages": [
+        39
+      ]
+    },
+    {
+      "field": "source_document",
+      "issue_type": "unreadable",
+      "detail": "Page 4 is only partially legible; some content could not be read.",
+      "severity": "medium",
+      "source_pages": [
+        4
+      ]
+    },
+    {
+      "field": "source_document",
+      "issue_type": "unreadable",
+      "detail": "Page 21 is only partially legible; some content could not be read.",
+      "severity": "medium",
+      "source_pages": [
+        21
+      ]
+    },
+    {
+      "field": "source_document",
+      "issue_type": "unreadable",
+      "detail": "Page 22 is only partially legible; some content could not be read.",
+      "severity": "medium",
+      "source_pages": [
+        22
+      ]
+    },
+    {
+      "field": "source_document",
+      "issue_type": "unreadable",
+      "detail": "Page 23 is only partially legible; some content could not be read.",
+      "severity": "medium",
+      "source_pages": [
+        23
+      ]
+    },
+    {
+      "field": "source_document",
+      "issue_type": "unreadable",
+      "detail": "Page 35 is only partially legible; some content could not be read.",
+      "severity": "medium",
+      "source_pages": [
+        35
+      ]
+    },
+    {
+      "field": "source_document",
+      "issue_type": "unreadable",
+      "detail": "Page 37 is only partially legible; some content could not be read.",
+      "severity": "medium",
+      "source_pages": [
+        37
+      ]
+    },
+    {
+      "field": "source_document",
+      "issue_type": "unreadable",
+      "detail": "Page 42 is only partially legible; some content could not be read.",
+      "severity": "medium",
+      "source_pages": [
+        42
+      ]
+    },
+    {
+      "field": "source_document",
+      "issue_type": "unreadable",
+      "detail": "Page 43 is only partially legible; some content could not be read.",
+      "severity": "medium",
+      "source_pages": [
+        43
+      ]
+    },
+    {
+      "field": "source_document",
+      "issue_type": "unreadable",
+      "detail": "Page 70 is only partially legible; some content could not be read.",
+      "severity": "medium",
+      "source_pages": [
+        70
+      ]
+    },
+    {
+      "field": "patient_demographics",
+      "issue_type": "conflict",
+      "detail": "Sources disagree on Patient Demographics: 'Patient name: NOT DOCUMENTED in readable pages; Age: NOT DOCUMENTED; Sex: CONFLICT (female per page 1, male per page 46); Weight: 71 kg; Ward: HDU/SDICU' (p1); 'Patient name: NOT DOCUMENTED in readable pages; Age: NOT DOCUMENTED; Sex: CONFLICT (male per page 46, female per page 1); Weight: 71 kg' (p46)",
+      "severity": "high",
+      "source_pages": [
+        1,
+        46
+      ]
+    },
+    {
+      "field": "principal_diagnosis",
+      "issue_type": "conflict",
+      "detail": "Sources disagree on Principal Diagnosis: 'Suspected colitis / Grade-I fatty liver (per discharge summary)' (p2); 'DKA (Diabetic Ketoacidosis) - per ER diagnosis and multiple consultation notes' (p3)",
+      "severity": "high",
+      "source_pages": [
+        2,
+        3
+      ]
+    },
+    {
+      "field": "principal_diagnosis",
+      "issue_type": "conflict",
+      "detail": "Sources disagree on Principal Diagnosis: 'Suspected colitis / Grade-I fatty liver (per discharge summary)' (p2); 'DKA (Diabetic Ketoacidosis) - per ER diagnosis and multiple consultation notes' (p3); 'Acute gastroenteritis with dehydration / Urinary tract infection (per admission note)' (p1)",
+      "severity": "high",
+      "source_pages": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "field": "principal_diagnosis",
+      "issue_type": "conflict",
+      "detail": "Sources disagree on Principal Diagnosis: 'Suspected colitis / Grade-I fatty liver (per discharge summary)' (p2); 'DKA (Diabetic Ketoacidosis) - per ER diagnosis and multiple consultation notes' (p3); 'Acute gastroenteritis with dehydration / Urinary tract infection (per admission note)' (p1); 'AFI, DKA, Uncontrolled T2DM, B/L pyelonephritis (per consultation notes)' (p54)",
+      "severity": "high",
+      "source_pages": [
+        1,
+        2,
+        3,
+        54
+      ]
+    },
+    {
+      "field": "discharge_medications",
+      "issue_type": "med_reconciliation",
+      "detail": "rabeprazole ADDED with no documented reason",
+      "severity": "high",
+      "source_pages": [
+        2
+      ]
+    },
+    {
+      "field": "discharge_medications",
+      "issue_type": "med_reconciliation",
+      "detail": "ondansetron CHANGED with no documented reason",
+      "severity": "high",
+      "source_pages": [
+        2,
+        42
+      ]
+    },
+    {
+      "field": "discharge_medications",
+      "issue_type": "med_reconciliation",
+      "detail": "ofloxacin ADDED with no documented reason",
+      "severity": "high",
+      "source_pages": [
+        2
+      ]
+    },
+    {
+      "field": "discharge_medications",
+      "issue_type": "med_reconciliation",
+      "detail": "mstrong ADDED with no documented reason",
+      "severity": "high",
+      "source_pages": [
+        2
+      ]
+    },
+    {
+      "field": "discharge_medications",
+      "issue_type": "med_reconciliation",
+      "detail": "zedott ADDED with no documented reason",
+      "severity": "high",
+      "source_pages": [
+        2
+      ]
+    },
+    {
+      "field": "discharge_medications",
+      "issue_type": "med_reconciliation",
+      "detail": "entr ADDED with no documented reason",
+      "severity": "high",
+      "source_pages": [
+        2
+      ]
+    },
+    {
+      "field": "discharge_medications",
+      "issue_type": "med_reconciliation",
+      "detail": "mefenamic acid ADDED with no documented reason",
+      "severity": "high",
+      "source_pages": [
+        2
+      ]
+    },
+    {
+      "field": "discharge_medications",
+      "issue_type": "med_reconciliation",
+      "detail": "loperamide ADDED with no documented reason",
+      "severity": "high",
+      "source_pages": [
+        2
+      ]
+    },
+    {
+      "field": "discharge_medications",
+      "issue_type": "med_reconciliation",
+      "detail": "meropenem STOPPED with no documented reason",
+      "severity": "high",
+      "source_pages": [
+        42
+      ]
+    },
+    {
+      "field": "discharge_medications",
+      "issue_type": "med_reconciliation",
+      "detail": "pantoprazole STOPPED with no documented reason",
+      "severity": "high",
+      "source_pages": [
+        42
+      ]
+    },
+    {
+      "field": "discharge_medications",
+      "issue_type": "med_reconciliation",
+      "detail": "insulin glargine STOPPED with no documented reason",
+      "severity": "high",
+      "source_pages": [
+        44
+      ]
+    },
+    {
+      "field": "discharge_medications",
+      "issue_type": "med_reconciliation",
+      "detail": "dolo STOPPED with no documented reason",
+      "severity": "high",
+      "source_pages": [
+        44
+      ]
+    },
+    {
+      "field": "discharge_medications",
+      "issue_type": "med_reconciliation",
+      "detail": "sepger STOPPED with no documented reason",
+      "severity": "high",
+      "source_pages": [
+        44
+      ]
+    },
+    {
+      "field": "discharge_medications",
+      "issue_type": "med_reconciliation",
+      "detail": "ivfluidsnsrl STOPPED with no documented reason",
+      "severity": "high",
+      "source_pages": [
+        45
+      ]
+    },
+    {
+      "field": "discharge_medications",
+      "issue_type": "med_reconciliation",
+      "detail": "sumol STOPPED with no documented reason",
+      "severity": "high",
+      "source_pages": [
+        43
+      ]
+    },
+    {
+      "field": "discharge_medications",
+      "issue_type": "med_reconciliation",
+      "detail": "insulin STOPPED with no documented reason",
+      "severity": "high",
+      "source_pages": [
+        43
+      ]
+    },
+    {
+      "field": "medication_reconciliation",
+      "issue_type": "med_reconciliation",
+      "detail": "Multiple medication changes from IV to oral at discharge without documented reasons. Notably, insulin (Actrapid and Lantus) used during admission is not listed on discharge medications - unclear if insulin was discontinued or if patient was switched to oral hypoglycemics. Also, INJ HAPPYNERVE PLUS was given during admission but not on discharge list.",
+      "severity": "high",
+      "source_pages": [
+        2,
+        42,
+        43,
+        44
+      ]
+    },
+    {
+      "field": "discharge_medications",
+      "issue_type": "drug_interaction",
+      "detail": "Interaction (high): Additive QT-interval prolongation risk from combining loperamide + ofloxacin + ondansetron.",
+      "severity": "high",
+      "source_pages": []
+    },
+    {
+      "field": "drug_interaction",
+      "issue_type": "drug_interaction",
+      "detail": "HIGH severity interaction: Additive QT-interval prolongation risk from combining Loperamide + Ofloxacin (in OFLOX TZ) + Ondansetron (EMESET). These three drugs are all on the discharge medication list. Clinician should review and consider ECG monitoring or alternative medications.",
+      "severity": "critical",
+      "source_pages": [
+        2
+      ]
+    },
+    {
+      "field": "patient_demographics",
+      "issue_type": "conflict",
+      "detail": "Gender conflict: Page 1 (admission note) refers to patient as 'she', while page 46 (admission record) says 'Patient on his Regular medication'. Patient name and age are not clearly documented in readable pages. Weight documented as 71 kg.",
+      "severity": "high",
+      "source_pages": [
+        1,
+        46
+      ]
+    },
+    {
+      "field": "principal_diagnosis",
+      "issue_type": "conflict",
+      "detail": "Multiple conflicting principal diagnoses across documents: (1) Discharge summary suggests suspected colitis/Grade-I fatty liver; (2) ER diagnosis was DKA; (3) Admission note says acute gastroenteritis with dehydration and UTI; (4) Multiple consultation notes document AFI, DKA, uncontrolled T2DM, and bilateral pyelonephritis as the working diagnoses. The discharge summary does not explicitly list a principal diagnosis heading.",
+      "severity": "high",
+      "source_pages": [
+        1,
+        2,
+        3,
+        54,
+        56
+      ]
+    },
+    {
+      "field": "discharge_date",
+      "issue_type": "conflict",
+      "detail": "Discharge date uncertainty: Consultation on 02/03/2026 says 'Discharge on Request (Evening)', but the discharge summary page index metadata says dates=09.03.2026. The follow-up review is scheduled for 09.03.2026. Clarify actual discharge date.",
+      "severity": "medium",
+      "source_pages": [
+        2,
+        56
+      ]
+    },
+    {
+      "field": "patient_demographics",
+      "issue_type": "missing",
+      "detail": "Patient Demographics: MISSING — Patient name, age, and MRN are not documented in any readable page. Gender is conflicting (she vs his). Weight is 71 kg (documented on medication charts).",
+      "severity": "medium",
+      "source_pages": [
+        1,
+        46,
+        42,
+        43,
+        44,
+        45
+      ]
+    },
+    {
+      "field": "principal_diagnosis",
+      "issue_type": "safety",
+      "detail": "Removed unverified value 'Suspected colitis / Grade-I fatty liver (per discharge summary)' (page 2): Source text mentions 'Grade-I fatty liver changes' and 'could represent colitis', but does not explicitly state 'Suspected colitis / Grade-I fatty liver' as a diagnosis. The phrase 'could represent colitis' is suggestive, not definitive.",
+      "severity": "high",
+      "source_pages": [
+        2
+      ]
+    },
+    {
+      "field": "hospital_course",
+      "issue_type": "safety",
+      "detail": "'hospital_course' is a synthesized narrative; verify it against the source record before use.",
+      "severity": "medium",
+      "source_pages": [
+        2,
+        3,
+        41,
+        42
+      ]
+    },
+    {
+      "field": "hospital_course",
+      "issue_type": "safety",
+      "detail": "Removed unverified value 'Patient presented to ER on 26/02/2026 with fever, generalized weakness, myalgia, and was diagnosed with DKA (blood glucose 443 mg/dL) with hypotension (BP 87/50 mmHg).' (page 3): Source text shows BP 87/50 and blood glucose 443 mg/dl, and diagnosis DKA, but does not mention fever, generalized weakness, myalgia, or hypotension explicitly. Fever and weakness are not in source.",
+      "severity": "high",
+      "source_pages": [
+        3
+      ]
+    }
+  ]
+}

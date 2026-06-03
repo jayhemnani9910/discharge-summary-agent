@@ -25,11 +25,13 @@ cache/
 .idea/
 .vscode/
 
-# Excluded from this public repo (delivered via the assignment form instead):
-# the README writeup, the video script, the generated drafts/traces, and the
-# vision transcript of the synthetic data. Source code only is published here.
-*.md
+# Internal notes and audit artifacts — not part of the submission.
 AUDIT_REPORT.md
+AUDIT_FRESH.md
+.remember/
+
+# Internal working docs (assignment brief PDF, design spec, video script) stay local.
+# The submission README, the generated drafts/traces under outputs/, and the synthetic-data
+# vision transcript under reference/ ARE tracked, so cloning the repo gives a complete,
+# runnable submission.
 docs/
-outputs/
-reference/
