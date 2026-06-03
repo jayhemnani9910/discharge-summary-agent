@@ -41,11 +41,32 @@ def _classify(exc: Exception) -> Exception:
     return FatalLLMError(f"unexpected: {exc}")
 
 
+def _is_quota(exc: Exception) -> bool:
+    """A rate-limit / quota error (429), worth rotating to another key or model."""
+    s = str(exc)
+    return ("429" in s) or ("RESOURCE_EXHAUSTED" in s) or ("quota" in s.lower())
+
+
 class GeminiProvider(LLMProvider):
     def __init__(self, config):
         self.config = config
-        self.client = genai.Client(api_key=config.gemini_api_key)
+        self._keys = (list(config.gemini_api_keys)
+                      or ([config.gemini_api_key] if config.gemini_api_key else []))
+        self._vision_models = list(config.gemini_vision_models) or [config.gemini_vision_model]
+        self._chat_models = list(config.gemini_chat_models) or [config.gemini_chat_model]
+        self._clients: dict = {}
         self._last_vision_call = 0.0
+
+    def _client(self, idx: int):
+        c = self._clients.get(idx)
+        if c is None:
+            # Apply the configured timeout to the Gemini client (in ms) so a stalled call cannot
+            # hang the run forever; per-call retries still live in retry.call_with_retries.
+            c = genai.Client(
+                api_key=self._keys[idx],
+                http_options=types.HttpOptions(timeout=int(self.config.llm_timeout_seconds * 1000)))
+            self._clients[idx] = c
+        return c
 
     # --- public API ---------------------------------------------------------
     def chat(self, system: str, history: list[Message], tools: list[ToolSpec]) -> LLMResponse:
@@ -72,7 +93,7 @@ class GeminiProvider(LLMProvider):
             ),
         )
 
-        resp = self._generate(self.config.gemini_chat_model, contents, cfg)
+        resp = self._generate(self._chat_models, contents, cfg)
         return self._parse_response(resp)
 
     def transcribe(self, image_bytes: bytes, mime_type: str, prompt: str) -> str:
@@ -80,7 +101,7 @@ class GeminiProvider(LLMProvider):
         contents = [types.Part.from_bytes(data=image_bytes, mime_type=mime_type),
                     types.Part.from_text(text=prompt)]
         cfg = types.GenerateContentConfig(temperature=0.0)
-        resp = self._generate(self.config.gemini_vision_model, contents, cfg)
+        resp = self._generate(self._vision_models, contents, cfg)
         text = self._extract_text(resp)
         if not text.strip():
             # An empty transcription is treated as a (transient) failure rather than a
@@ -94,19 +115,35 @@ class GeminiProvider(LLMProvider):
             temperature=0.0,
             response_mime_type="application/json" if json_mode else None,
         )
-        resp = self._generate(self.config.gemini_chat_model, [prompt], cfg)
+        resp = self._generate(self._chat_models, [prompt], cfg)
         return self._extract_text(resp)
 
     # --- internals ----------------------------------------------------------
-    def _generate(self, model, contents, cfg):
-        """One attempt. Classifies any error into our transient/fatal contract.
+    def _generate(self, models, contents, cfg):
+        """Run one generation, rotating across keys and the model fallback list on a quota
+        (429) error so a single exhausted key/model does not fail the call. A non-quota error
+        is classified and raised at once. If every key/model is quota-exhausted, the last quota
+        error is raised as transient so retry.call_with_retries can still back off and retry.
 
-        Retries live in retry.call_with_retries so they are visible in the trace.
+        Per-call retries of transient/network errors live in retry.call_with_retries so they
+        stay visible in the trace; this method only handles key/model rotation.
         """
-        try:
-            return self.client.models.generate_content(model=model, contents=contents, config=cfg)
-        except Exception as raw:  # noqa: BLE001 - re-classified immediately below
-            raise _classify(raw)
+        model_list = list(models) if isinstance(models, (list, tuple)) else [models]
+        if not self._keys:
+            raise FatalLLMError(
+                "no Gemini API key configured (set GEMINI_API_KEY or GEMINI_API_KEYS)")
+        last_quota = None
+        for model in model_list:
+            for ki in range(len(self._keys)):
+                try:
+                    return self._client(ki).models.generate_content(
+                        model=model, contents=contents, config=cfg)
+                except Exception as raw:  # noqa: BLE001 - re-classified below
+                    if _is_quota(raw):
+                        last_quota = TransientLLMError(f"Gemini quota (model={model}): {raw}")
+                        continue
+                    raise _classify(raw)
+        raise last_quota or TransientLLMError("Gemini: all keys/models exhausted")
 
     def _respect_vision_rate_limit(self) -> None:
         gap = time.monotonic() - self._last_vision_call

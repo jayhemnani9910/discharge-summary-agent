@@ -77,6 +77,18 @@ class PageStore:
     def unreadable_pages(self) -> list[int]:
         return [r.page for r in self.records if not r.readable]
 
+    def partially_legible_pages(self, min_markers: int = 3) -> list[int]:
+        """Readable pages whose transcription carries several [illegible]/[guess?] markers, i.e.
+        substantial content could not be read even though the page is not wholly unreadable."""
+        out = []
+        for r in self.records:
+            if not r.readable:
+                continue
+            low = (r.text or "").lower()
+            if low.count("[illegible]") + low.count("[guess?]") >= min_markers:
+                out.append(r.page)
+        return out
+
     def search(self, query: str, limit: int = 8) -> list[dict]:
         """Cheap keyword search: score pages by how many query terms they contain,
         return a snippet around the first hit. Good enough to help the agent navigate."""
@@ -156,9 +168,13 @@ def _parse_transcription(raw: str) -> dict:
     return {"text": raw, "doc_type": "unknown", "dates": [], "has_handwriting": False, "gist": ""}
 
 
-def _cache_path(cache_dir: str, pdf_path: str, page: int) -> str:
+def _cache_path(cache_dir: str, pdf_path: str, page: int, model: str = "") -> str:
     stem = re.sub(r"[^a-zA-Z0-9_-]", "_", os.path.splitext(os.path.basename(pdf_path))[0])
-    return os.path.join(cache_dir, f"{stem}_{_CACHE_VERSION}_page_{page:03d}.json")
+    # Include the vision model in the key so switching models never reuses a stale (or
+    # poisoned) transcription produced by a different model.
+    mtag = re.sub(r"[^a-zA-Z0-9]", "", model or "")
+    suffix = f"_{mtag}" if mtag else ""
+    return os.path.join(cache_dir, f"{stem}_{_CACHE_VERSION}{suffix}_page_{page:03d}.json")
 
 
 def load_transcript_store(path: str) -> PageStore:
@@ -204,17 +220,22 @@ def transcribe_pdf(
     if tracer:
         tracer.emit("ingest", message=f"Ingesting {total} page(s) from {os.path.basename(pdf_path)}")
 
+    vision_model = (config.gemini_vision_model if config.vision_provider == "gemini"
+                    else config.vision_provider)
     records: list[PageRecord] = []
     for page in range(1, total + 1):
-        cache_file = _cache_path(cache_dir, pdf_path, page)
+        cache_file = _cache_path(cache_dir, pdf_path, page, vision_model)
         if os.path.exists(cache_file):
             with open(cache_file, encoding="utf-8") as fh:
                 records.append(PageRecord(**json.load(fh)))
             continue
 
         rec = _transcribe_one(pdf_path, page, provider, config, tracer)
-        with open(cache_file, "w", encoding="utf-8") as fh:
-            json.dump(rec.to_dict(), fh, ensure_ascii=False, indent=2)
+        # Cache successful transcriptions only. A failed page (e.g. a 429) is left uncached
+        # so a later run retries it instead of permanently reusing a blank unreadable record.
+        if rec.readable:
+            with open(cache_file, "w", encoding="utf-8") as fh:
+                json.dump(rec.to_dict(), fh, ensure_ascii=False, indent=2)
         records.append(rec)
 
     store = PageStore(records)

@@ -25,10 +25,22 @@ def system_prompt() -> str:
         "HOW TO RECORD FACTS.\n"
         "- record_field(section, value, source_page, quote, confidence): the quote must be exact "
         "words copied from that page. If your quote is not on the page, the call is rejected.\n"
-        "- If two pages disagree about a single-value field (e.g. the principal diagnosis), record "
-        "BOTH values; the field becomes a CONFLICT and is flagged. Never pick one silently.\n"
-        "- For labs that are sent/awaited/not yet resulted, do not record a value — mark the "
-        "section PENDING and add it to pending_results.\n"
+        "- If two pages disagree about a single-value field, record BOTH values with their own "
+        "page + quote; the field becomes a CONFLICT and is flagged. Never pick one silently.\n"
+        "- PRINCIPAL DIAGNOSIS specifically: the typed discharge summary often labels one "
+        "diagnosis while the ER chart, admission note, and consultation notes work up a "
+        "DIFFERENT one. When that happens, this is a CONFLICT, not a settled value. Record the "
+        "discharge-summary diagnosis AND the working/admission diagnosis as TWO separate "
+        "principal_diagnosis values (each with its own page + verbatim quote) so the field "
+        "becomes CONFLICT. Do not record only one and merely mention the other in a flag or in "
+        "secondary_diagnoses; the principal_diagnosis field itself must show the disagreement.\n"
+        "- DATES AND DEMOGRAPHICS can also disagree across pages (e.g. different admission dates, "
+        "'she' on one page and 'his' on another). Cross-check them; if they conflict, record both "
+        "values (CONFLICT) or mark the field and flag the discrepancy rather than presenting one "
+        "as settled.\n"
+        "- For labs that are sent/awaited/not yet resulted, do not record a value — record the "
+        "investigation name into pending_results (with page + quote); that section is marked "
+        "PENDING for you.\n"
         "- If a page is UNREADABLE, never infer its contents; flag it.\n\n"
 
         "ONE ITEM PER CALL FOR LISTS.\n"
@@ -38,11 +50,16 @@ def system_prompt() -> str:
         "single page; a citation must support the exact value it is attached to.\n\n"
 
         "HOSPITAL COURSE.\n"
-        "You MUST record hospital_course with record_field as a brief 2-4 sentence narrative "
-        "of the stay. Cite the page whose 'course in hospital' text best supports it (e.g. the "
-        "discharge summary) and quote a real phrase from it. It is treated as a synthesized "
-        "summary and flagged for review, not quote-checked word-for-word. Do NOT mark "
-        "hospital_course NOT_DOCUMENTED or MISSING when the notes describe the stay.\n\n"
+        "You MUST record hospital_course as a SHORT narrative of the stay, broken into 2-4 "
+        "separate record_field calls — one clause per call, each citing the specific page that "
+        "supports THAT clause with a verbatim quote (e.g. one call for the presenting "
+        "problem/diagnosis citing the page that states it, one for the key treatment citing the "
+        "page that documents it, one for the outcome/condition at discharge). Do NOT put many "
+        "multi-page claims (DKA, glucose, antibiotics, imaging, discharge-on-request) into one "
+        "value citing only page 1; each fact must be cited to the page that actually contains it. "
+        "The section is treated as a synthesized summary and flagged for review, but every clause "
+        "still has to be quote-backed. Do NOT mark hospital_course NOT_DOCUMENTED or MISSING when "
+        "the notes describe the stay.\n\n"
 
         "MEDICATIONS.\n"
         "Record admission medications and discharge medications with record_medication, then call "
@@ -74,8 +91,9 @@ def bootstrap_message(store, patient_id: str) -> str:
     for s in SECTIONS:
         lines.append(f"- {s.key}: {s.label} — {s.hint}")
     if unreadable:
-        lines += ["", f"NOTE: pages {unreadable} could not be transcribed. Flag them; do not "
-                  "infer their contents."]
+        lines += ["", f"NOTE: pages {unreadable} could not be transcribed. They are ALREADY "
+                  "flagged for review; do NOT spend tool calls re-flagging them, and never infer "
+                  "their contents. Spend your steps on the readable pages."]
     lines += ["", "Begin. Read/search the pages you need, record sourced values, reconcile "
               "medications, run the interaction check, flag anything uncertain, then finalize."]
     return "\n".join(lines)

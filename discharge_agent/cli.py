@@ -116,9 +116,10 @@ def main(argv=None) -> int:
     run.add_argument("--patient", help="Patient id/label (default: parent folder name).")
     run.add_argument("--out", help="Output directory (default: outputs/<patient>).")
     run.add_argument("--cache", default="cache", help="Transcription cache directory.")
-    run.add_argument("--chat-provider", choices=["gemini", "deepseek", "mock"],
-                     help="Override the reasoning provider.")
-    run.add_argument("--vision-provider", choices=["gemini", "mock"],
+    run.add_argument("--chat-provider", choices=["gemini", "deepseek"],
+                     help="Override the reasoning provider. (The no-key 'mock' provider is "
+                     "only wired up for the `demo` command, which is the offline path.)")
+    run.add_argument("--vision-provider", choices=["gemini"],
                      help="Override the vision/OCR provider.")
     run.add_argument("--max-steps", type=int, help="Override the hard step cap.")
     run.add_argument("--inject-read-failure-page", type=int,

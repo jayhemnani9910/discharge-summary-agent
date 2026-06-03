@@ -112,6 +112,44 @@ def test_step_cap_produces_partial_draft_not_crash(store, fast_config):
     assert any(fl.issue_type == "missing" for fl in result.state.flags)
 
 
+def test_repeated_guardrail_rejections_trip_the_error_breaker(store, fast_config):
+    # A model stuck re-citing unsupported quotes (rejected, not "error") must trip the
+    # consecutive-error breaker rather than spinning all the way to the step cap.
+    fast_config.max_consecutive_tool_errors = 3
+    fast_config.max_steps = 50
+
+    def responder(system, history, tools):
+        return _resp(("record_field", {"section": "principal_diagnosis", "value": "Pneumonia",
+                                        "source_page": 1, "quote": "this quote is not on any page"}))
+
+    provider = MockProvider(fast_config, responder=responder)
+    tracer = Tracer()
+    result = run_agent(None, "test-patient", provider, fast_config, tracer, store=store)
+    assert result.stop_reason == "too many consecutive tool errors"
+    assert result.steps < 50
+
+
+def test_one_batch_of_rejections_does_not_trip_breaker(store, fast_config):
+    # A single step emitting many unsupported-quote calls (one bad batch, e.g. admission meds
+    # whose quotes do not match the messy OCR) must NOT trip the breaker; only several
+    # CONSECUTIVE fully-failed steps should. The breaker counts steps, not calls.
+    fast_config.max_consecutive_tool_errors = 3
+    fast_config.max_steps = 6
+    bad = [("record_medication", {"stage": "admission", "name": f"D{i}", "details": "x",
+            "source_page": 1, "quote": "definitely not on the page"}) for i in range(8)]
+    scripted = [_resp(*bad)]
+
+    def responder(system, history, tools):
+        if scripted:
+            return scripted.pop(0)
+        return _resp(("read_page", {"page": 1}))   # productive thereafter
+
+    provider = MockProvider(fast_config, responder=responder)
+    tracer = Tracer()
+    result = run_agent(None, "test-patient", provider, fast_config, tracer, store=store)
+    assert result.stop_reason != "too many consecutive tool errors"
+
+
 def test_llm_unavailable_is_handled_gracefully(store, fast_config):
     provider = MockProvider(fast_config, script=[TransientLLMError("429")] * 3)
     tracer = Tracer()

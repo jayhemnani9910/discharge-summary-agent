@@ -33,6 +33,11 @@ _BRAND_TO_GENERIC = {
     "lopiramide": "loperamide", "loperamide": "loperamide",
     "insulin": "insulin", "actrapid": "insulin", "human actrapid": "insulin",
     "lantus": "insulin glargine", "metformin": "metformin",
+    # OCR/brand variants of the same drug seen in this record's charts. Merging these
+    # stops reconciliation reporting one drug twice (e.g. Meromac vs Meropdac for
+    # meropenem); genuinely distinct names are left unmapped and still surface.
+    "meromac": "meropenem", "meropdac": "meropenem", "meropenem": "meropenem",
+    "pantodac": "pantoprazole", "somol": "sumol",
 }
 
 # Drugs that prolong the QT interval; two together is an additive risk worth flagging.
@@ -50,12 +55,39 @@ _PAIR_INTERACTIONS = {
 }
 
 
+def _canon(text: str) -> str:
+    """Collapse a name to comparable letters/digits only (drops spaces and punctuation)."""
+    import re
+
+    return re.sub(r"[^a-z0-9]", "", (text or "").lower())
+
+
 def _generic(name: str) -> str:
-    key = name.strip().lower()
-    for brand, gen in _BRAND_TO_GENERIC.items():
-        if brand in key:
-            return gen
-    return key
+    """Normalise a medication name so OCR/format variants of one drug collapse together.
+
+    Strips dosage-form words (INJ/TAB/T/CAP/SYP) and any parenthetical annotation, then
+    matches the brand table against WHOLE words of the name (a contiguous run of tokens),
+    not as a raw substring -- a substring match would wrongly fold "ciprofloxacin" into
+    "ofloxacin" because "oflox" is a substring of it. Unknown names fall through to their
+    own canonical key (so they are never silently merged into another drug; they just
+    won't match the interaction table).
+    """
+    import re
+
+    key = (name or "").strip().lower()
+    key = re.sub(r"\([^)]*\)", " ", key)  # drop "(meropenem)" style annotations
+    key = re.sub(r"\b(inj|tab|tablet|cap|capsule|syp|syrup|t)\b\.?", " ", key)
+    tokens = [_canon(t) for t in re.split(r"\s+", key) if _canon(t)]
+    # Longer (multi-word) brand keys first so "oflox tz" wins over "oflox".
+    for brand, gen in sorted(_BRAND_TO_GENERIC.items(), key=lambda kv: -len(kv[0].split())):
+        bwords = [_canon(t) for t in brand.split() if _canon(t)]
+        if not bwords:
+            continue
+        n = len(bwords)
+        for i in range(len(tokens) - n + 1):
+            if tokens[i:i + n] == bwords:
+                return gen
+    return _canon(key)
 
 
 # --- tool schemas (uppercase JSON-schema types, as Gemini expects) ----------

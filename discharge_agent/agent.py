@@ -33,7 +33,7 @@ from .retry import call_with_retries
 from .schema import SECTION_KEYS
 from .state import DraftState, FieldStatus, Severity
 from .tools import TOOL_SPECS, ToolDispatcher
-from .verify import verify_draft
+from .verify import detect_conflicts, verify_draft
 
 
 @dataclass
@@ -61,6 +61,10 @@ def run_agent(pdf_path, patient_id, provider, config, tracer, cache_dir="cache",
         state.add_flag("source_document", "unreadable",
                        f"Page {page} could not be transcribed; its content is unknown.",
                        Severity.HIGH, [page])
+    for page in store.partially_legible_pages():
+        state.add_flag("source_document", "unreadable",
+                       f"Page {page} is only partially legible; some content could not be read.",
+                       Severity.MEDIUM, [page])
 
     dispatcher = ToolDispatcher(store, state, config, tracer)
     system = system_prompt()
@@ -108,19 +112,29 @@ def run_agent(pdf_path, patient_id, provider, config, tracer, cache_dir="cache",
 
         results = []
         finalize_ready = False
+        step_productive = False
+        step_unproductive = False
         for call in response.tool_calls:
             result = dispatcher.dispatch(call.name, call.args)
-            severity = "warn" if isinstance(result, dict) and result.get("error") else "info"
+            unproductive = isinstance(result, dict) and (result.get("error") or result.get("rejected"))
+            severity = "warn" if unproductive else "info"
             tracer.step(steps, reasoning=response.text, tool=call.name,
                         tool_input=call.args, result=result, severity=severity)
             results.append({"name": call.name, "id": call.id, "result": result})
-
-            if isinstance(result, dict) and result.get("error"):
-                consecutive_errors += 1
+            if unproductive:
+                step_unproductive = True
             else:
-                consecutive_errors = 0
+                step_productive = True
             if call.name == "finalize_draft" and isinstance(result, dict) and result.get("ready"):
                 finalize_ready = True
+
+        # The breaker counts consecutive fully-failed STEPS, not individual calls: a single bad
+        # batch (e.g. admission-med quotes that don't match the OCR text) is one stuck step, and a
+        # model that does anything productive next step resets it. Only a sustained stall trips it.
+        if step_unproductive and not step_productive:
+            consecutive_errors += 1
+        else:
+            consecutive_errors = 0
 
         history.append(msg_tool_results(results))
 
@@ -150,6 +164,9 @@ def run_agent(pdf_path, patient_id, provider, config, tracer, cache_dir="cache",
 
     # 3) Independent verification of every recorded value before we emit anything.
     verify_summary = verify_draft(provider, store, state, config, tracer)
+    # 4) A guaranteed conflict scan for single-valued fields, independent of the agent's prompt,
+    #    so a disagreement the loop missed still surfaces as a CONFLICT / review flag.
+    detect_conflicts(provider, store, state, config, tracer)
 
     state.finalized = finalized
     tracer.emit("finalize",

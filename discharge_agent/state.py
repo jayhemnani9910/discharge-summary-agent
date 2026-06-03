@@ -90,6 +90,7 @@ class MedItem:
     details: str             # dose / frequency / route as documented
     source_page: int
     quote: str
+    verified: bool = True    # set False by the post-hoc verifier if unsupported by its page
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -130,11 +131,16 @@ class DraftState:
     def record_value(
         self, section: str, value: str, source_page: int, quote: str, confidence: str
     ) -> SectionField:
+        from .schema import SECTION_BY_KEY
+
         f = self.fields[section]
         sv = SourcedValue(value=value, source_page=source_page, quote=quote, confidence=confidence)
-        # Conflict detection only applies to single-valued sections: if a different
+        # Conflict detection applies to single-valued *factual* sections: if a different
         # value was already recorded, keep both and mark CONFLICT rather than overwrite.
-        if f.values and self._is_single(section):
+        # Narrative sections (e.g. hospital_course) are exempt: they are built from several
+        # separately-cited clauses, so a second clause is an addition, not a contradiction.
+        narrative = SECTION_BY_KEY[section].narrative
+        if f.values and self._is_single(section) and not narrative:
             already = {_norm(v.value) for v in f.values}
             if _norm(value) not in already:
                 f.values.append(sv)
@@ -143,7 +149,10 @@ class DraftState:
             return f  # duplicate of existing value; ignore
         f.values.append(sv)
         if f.status != FieldStatus.CONFLICT:
-            f.status = FieldStatus.VALUE
+            # An item recorded into pending_results is, by definition, an awaited result:
+            # keep the cited item but mark the section PENDING (not VALUE) so the status
+            # matches what the field actually is.
+            f.status = FieldStatus.PENDING if section == "pending_results" else FieldStatus.VALUE
         return f
 
     def set_status(self, section: str, status: FieldStatus, detail: str) -> None:
@@ -183,14 +192,6 @@ class DraftState:
     def unhandled_sections(self) -> list[str]:
         """Sections the agent has not yet addressed at all (still EMPTY)."""
         return [k for k, f in self.fields.items() if f.status == FieldStatus.EMPTY]
-
-    def has_unverified_values(self) -> list[str]:
-        out = []
-        for k, f in self.fields.items():
-            if f.status in (FieldStatus.VALUE, FieldStatus.CONFLICT):
-                if any(not v.verified for v in f.values):
-                    out.append(k)
-        return out
 
     # --- serialisation ------------------------------------------------------
     def to_dict(self) -> dict:
