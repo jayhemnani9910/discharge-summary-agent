@@ -79,9 +79,11 @@ def _render_section(state: DraftState, key: str) -> list[str]:
     s = SECTION_BY_KEY[key]
     f = state.fields[key]
     out = [f"## {s.label}"]
-    if f.status in (FieldStatus.VALUE, FieldStatus.CONFLICT) and f.values:
-        if f.status == FieldStatus.CONFLICT:
-            out.append(f"**{_STATUS_BANNER[FieldStatus.CONFLICT]}**")
+    # PENDING sections (e.g. pending_results) still carry their cited items; we show the
+    # banner *and* the items so the reader sees what was sent and that it is awaited.
+    if f.values and f.status in (FieldStatus.VALUE, FieldStatus.CONFLICT, FieldStatus.PENDING):
+        if f.status in (FieldStatus.CONFLICT, FieldStatus.PENDING):
+            out.append(f"**{_STATUS_BANNER[f.status]}**")
         for v in f.values:
             mark = "" if v.verified else " _(unverified)_"
             out.append(f"- {v.value}  \n  _[source: page {v.source_page}; "
@@ -131,7 +133,8 @@ def _render_medications(state: DraftState) -> list[str]:
     if state.interaction_checks:
         any_found = [it for chk in state.interaction_checks for it in chk["interactions"]]
         out += ["", f"_Drug-interaction check run; {len(any_found)} interaction(s) found "
-                "(see flags)._"]
+                "(see flags). Screen used a limited mock database; absence of a result is "
+                "NOT a guarantee of safety._"]
     out.append("")
     return out
 
