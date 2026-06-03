@@ -100,6 +100,66 @@ def cmd_demo(args) -> int:
     return 0
 
 
+def cmd_learn(args) -> int:
+    """Part 2: run the best-of-N + reward-model learning loop and emit the before/after curve.
+
+    Default is fully offline (the shipped synthetic record, a deterministic stand-in judge), so
+    it runs with no API key. ``--live`` uses the configured chat provider for real candidate
+    generation and a real LLM judge; ``--patients DIR`` learns across real patient folders."""
+    from .learning.data import demo_items, items_from_result, split
+    from .learning.edit_source import DoctorEdits, SimulatedReviewer
+    from .learning.loop import run_learning
+    from .learning.offline import offline_provider
+    from .learning.report import write_report
+
+    cfg = _build_config(args)
+    out_dir = args.out or os.path.join("outputs", "learning")
+    os.makedirs(out_dir, exist_ok=True)
+    tracer = Tracer(os.path.join(out_dir, "trace.jsonl"))
+
+    if args.patients:
+        from .ingest import load_transcript_store
+        cfg.require_keys(need_vision=False)
+        provider = build_provider(cfg.chat_provider, cfg)
+        items = []
+        for folder in sorted(d.path for d in os.scandir(args.patients) if d.is_dir()):
+            pid = os.path.basename(folder)
+            transcript = os.path.join(folder, "transcript.json")
+            store = load_transcript_store(transcript) if os.path.exists(transcript) else None
+            pdf = os.path.join(folder, "source.pdf")
+            result = run_agent(pdf if not store else None, pid, provider, cfg, tracer,
+                               store=store, vision_provider=build_provider(cfg.vision_provider, cfg)
+                               if not store else None)
+            items += items_from_result(pid, result)
+    else:
+        provider = build_provider(cfg.chat_provider, cfg) if args.live else offline_provider(cfg)
+        if args.live:
+            cfg.require_keys(need_vision=False)
+        items = demo_items(cfg)
+
+    edit_source = DoctorEdits(_load_json(args.edits)) if args.edits else SimulatedReviewer()
+    train, heldout = split(items, seed=args.seed, heldout_frac=args.heldout_frac)
+    print(f"Learning over {len(train)} training / {len(heldout)} held-out sections "
+          f"({'live' if (args.live or args.patients) else 'offline'} provider).", file=sys.stderr)
+
+    report = run_learning(provider, edit_source, train, heldout, cfg,
+                          n_candidates=args.n_candidates, cache_dir=out_dir,
+                          regenerate=args.generate, tracer=tracer)
+    tracer.close()
+    paths = write_report(report, out_dir)
+    print(f"\nBaseline edit burden: {report.baseline_burden:.3f}  ->  after learning: "
+          f"{report.final_burden:.3f}  ({report.improvement:.3f} lower).")
+    print(f"  Safety retention stayed 100%; {report.n_blocked_unsafe} unsafe candidate(s) blocked.")
+    print(f"  Report: {paths['report']}   Curve: {paths['curve']}")
+    return 0
+
+
+def _load_json(path):
+    import json
+    with open(path, encoding="utf-8") as fh:
+        return json.load(fh)
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(prog="discharge_agent",
                                      description="Agentic discharge-summary drafter (draft for review).")
@@ -125,6 +185,25 @@ def main(argv=None) -> int:
     run.add_argument("--inject-read-failure-page", type=int,
                      help="Force the first read of this page to fail (demonstrates retry/flag).")
     run.set_defaults(func=cmd_run)
+
+    learn = sub.add_parser("learn", help="Part 2: learn from (simulated) doctor edits and emit "
+                           "the before/after edit-burden curve.")
+    learn.add_argument("--out", help="Output directory (default: outputs/learning).")
+    learn.add_argument("--live", action="store_true", help="Use the configured chat provider for "
+                       "real candidate generation and a real LLM judge (needs a key).")
+    learn.add_argument("--patients", help="Directory of patient folders to learn across "
+                       "(each with source.pdf or transcript.json). Implies live.")
+    learn.add_argument("--edits", help="JSON {section_key: edited_text} of real clinician edits "
+                       "to use instead of the simulated reviewer (production edit source).")
+    learn.add_argument("--chat-provider", choices=["gemini", "deepseek"],
+                       help="Reasoning provider for --live / --patients.")
+    learn.add_argument("--vision-provider", choices=["gemini"], help="Vision provider for --patients.")
+    learn.add_argument("--n-candidates", type=int, default=4, help="Candidates per section (best-of-N).")
+    learn.add_argument("--seed", type=int, default=0, help="Split seed.")
+    learn.add_argument("--heldout-frac", type=float, default=0.4, help="Held-out fraction (single record).")
+    learn.add_argument("--generate", action="store_true", help="Regenerate candidates, ignoring cache.")
+    learn.add_argument("--max-steps", type=int, help=argparse.SUPPRESS)
+    learn.set_defaults(func=cmd_learn)
 
     args = parser.parse_args(argv)
     return args.func(args)

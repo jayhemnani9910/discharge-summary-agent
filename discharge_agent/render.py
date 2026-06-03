@@ -43,6 +43,15 @@ def render_all(result, out_dir: str) -> dict[str, str]:
     return files
 
 
+def section_text(state: DraftState, key: str) -> str:
+    """Plain-text rendering of a single section. A small public surface so the Part 2 learning
+    loop restyles and scores exactly what Part 1 renders, rather than duplicating the layout.
+    Discharge medications live in their own structure and render through the medication path."""
+    if key == "discharge_medications":
+        return "\n".join(_render_medications(state)).strip()
+    return "\n".join(_render_section(state, key)).strip()
+
+
 def render_draft_md(result) -> str:
     state: DraftState = result.state
     status = ("COMPLETE draft — all sections addressed" if result.finalized
