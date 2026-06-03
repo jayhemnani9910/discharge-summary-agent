@@ -29,6 +29,7 @@ cache/
 # the README writeup, the video script, the generated drafts/traces, and the
 # vision transcript of the synthetic data. Source code only is published here.
 *.md
+AUDIT_REPORT.md
 docs/
 outputs/
 reference/
