@@ -57,9 +57,19 @@ def finalize_check(state: DraftState, store) -> tuple[bool, list[str]]:
         if not state.reconciliation_attempted:
             remaining.append("medication reconciliation not done: call reconcile_medications "
                              "after recording admission and discharge medications")
-        if not state.interaction_check_done:
-            remaining.append("drug-interaction check not done: call drug_interaction_check "
-                             "on the discharge medications")
+        # Do not trust a bare "check was called" flag: a call on an empty or partial
+        # medication list would otherwise let a draft finalize with a real interaction
+        # never examined. Require that the accumulated checks actually cover every
+        # discharge medication (matched by generic name), or the safety check is not done.
+        from .tools import _generic
+        checked = set()
+        for chk in state.interaction_checks:
+            checked |= {_generic(m) for m in chk.get("input", [])}
+        uncovered = sorted({m.name for m in discharge_meds if _generic(m.name) not in checked})
+        if uncovered:
+            remaining.append("drug-interaction check has not covered all discharge "
+                             f"medications ({', '.join(uncovered)}): call drug_interaction_check "
+                             "with the full discharge medication list")
 
     # Every unreadable page must be surfaced, never silently dropped.
     flagged_pages = {p for fl in state.flags for p in fl.source_pages}

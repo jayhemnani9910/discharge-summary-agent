@@ -158,3 +158,30 @@ def test_interaction_check_disclaimer_present(store, state, fast_config):
     d = make(store, state, fast_config)
     res = d.dispatch("drug_interaction_check", {"medications": ["Raciper"]})
     assert "NOT a guarantee" in res["disclaimer"]
+
+
+def test_finalize_blocks_when_interaction_check_skips_discharge_meds(store, state, fast_config):
+    # Hard requirement #7: a safety check that does not actually cover the discharge
+    # medications must NOT satisfy the finalize gate. Calling drug_interaction_check with
+    # an empty (or partial) list cannot launder the draft to "interaction check done".
+    from discharge_agent.guardrails import finalize_check
+    d = make(store, state, fast_config)
+    state.add_medication("discharge", "Emeset", "8mg", 1, "Emeset")
+    state.add_medication("discharge", "Oflox", "200mg", 1, "Oflox")
+    state.reconciliation_attempted = True  # isolate the interaction-coverage condition
+    d.dispatch("drug_interaction_check", {"medications": []})  # the bypass attempt
+    _, remaining = finalize_check(state, store)
+    assert any("interaction" in r.lower() for r in remaining), \
+        f"empty interaction check must not satisfy the gate; remaining={remaining}"
+
+
+def test_finalize_interaction_satisfied_when_discharge_meds_covered(store, state, fast_config):
+    # The gate is satisfied only once the check actually covers the discharge meds.
+    from discharge_agent.guardrails import finalize_check
+    d = make(store, state, fast_config)
+    state.add_medication("discharge", "Emeset", "8mg", 1, "Emeset")
+    state.add_medication("discharge", "Oflox", "200mg", 1, "Oflox")
+    state.reconciliation_attempted = True
+    d.dispatch("drug_interaction_check", {"medications": ["Emeset", "Oflox"]})
+    _, remaining = finalize_check(state, store)
+    assert not any("interaction" in r.lower() for r in remaining), remaining
